@@ -41,7 +41,7 @@ def main():
         city = idx.split('_')[0]
         # idx is city_shot_frame
         label = CS.load_label(args.split, city, idx)
-        im_file = args.result_dir + '/' + idx + '_leftImg8bit.png' 
+        im_file = args.result_dir + '/' + idx + '.png' 
         im = np.array(Image.open(im_file))
         # im = scipy.misc.imresize(im, (256, 256))
         im = scipy.misc.imresize(im, (label.shape[1], label.shape[2]))
