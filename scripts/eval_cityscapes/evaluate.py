@@ -7,6 +7,7 @@ import scipy.misc
 from PIL import Image
 from util import *
 from cityscapes import cityscapes
+labels = __import__('labels')
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--cityscapes_dir", type=str, required=True, help="Path to the original cityscapes dataset")
@@ -43,7 +44,7 @@ def main():
         label = CS.load_label(args.split, city, idx)
         im_file = args.result_dir + '/' + idx + '_fake_B.png' 
         im = np.array(Image.open(im_file))
-        #im = scipy.misc.imresize(im, (256, 256))
+        im = scipy.misc.imresize(im, (256, 256))
         im = scipy.misc.imresize(im, (label.shape[1], label.shape[2]))
         im_label = np.zeros((256,256))
         # change prediction image from color to label using neighbor 
@@ -71,11 +72,11 @@ def main():
             while len(cl) < 15:
                 cl = cl + ' '
             f.write('%s: acc = %f, iou = %f\n' % (cl, per_class_acc[i], per_class_iou[i]))
-def neighbor(color):
+def neighbor_id(color):
     min_dist = 10000
     min_id = -1
-    for i in labels.labels:
-        dist = np.norm(labels.labels[i].color, color)
+    for i in range(len(labels.labels)):
+        dist = np.linalg.norm(labels.labels[i].color- color)
         min_dist = min(min_dist, dist)
         if(min_dist == dist):
             min_id = i 
