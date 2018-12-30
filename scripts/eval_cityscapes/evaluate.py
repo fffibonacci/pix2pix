@@ -74,8 +74,8 @@ def main():
 def neighbor(color):
     min_dist = 10000
     min_id = -1
-    for i in labels:
-        dist = np.norm(labels[i].color, color)
+    for i in labels.labels:
+        dist = np.norm(labels.labels[i].color, color)
         min_dist = min(min_dist, dist)
         if(min_dist == dist):
             min_id = i 
