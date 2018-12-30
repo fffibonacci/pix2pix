@@ -47,5 +47,6 @@ for sp in splits:
             im_A = cv2.imread(path_A, cv2.IMREAD_COLOR)
             im_B = cv2.imread(path_B, cv2.IMREAD_COLOR)
             im_AB = np.concatenate([im_A, im_B], 1)
+            im_AB = scipy.misc.imresize(im_AB, (256, 512))
             cv2.imwrite(path_AB, im_AB)
 
