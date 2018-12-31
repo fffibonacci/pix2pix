@@ -44,19 +44,18 @@ def main():
         label = CS.load_label(args.split, city, idx)
         im_file = args.result_dir + '/' + idx + '_fake_B.png' 
         im = np.array(Image.open(im_file))
-        print(im.shape)
-	im = scipy.misc.imresize(im, (label.shape[1], label.shape[2]))
-        im_label = np.zeros((1024,2048))
-        print(im.shape,label.shape)
-	# change prediction image from color to label using neighbor 
-        for i in range(1024):
-            for j in range(2048):
+       # im = scipy.misc.imresize(im, (label.shape[1], label.shape[2]))
+        im_label = np.zeros((256,256))
+        # change prediction image from color to label using neighbor 
+        for i in range(256):
+            for j in range(256):
                 color = im[i][j]
                 im_label[i][j] = neighbor_id(color)
-  	im_label = np.array(im_label,dtype = int)       
+        #im_label = im_label[np.newaxis, ...]       
         #out = segrun(net, CS.preprocess(im))
         # print(im_label.flatten().shape) 
-        hist_perframe += fast_hist(label.flatten(), im_label.flatten(), n_cl)
+        im_label = scipy.misc.imresize(im_label,(1024,2048),interp='nearest')
+	hist_perframe += fast_hist(label.flatten(), im_label.flatten(), n_cl)
         if args.save_output_images > 0:
             label_im = CS.palette(label)
             pred_im = CS.palette(im_label)
