@@ -44,12 +44,11 @@ def main():
         label = CS.load_label(args.split, city, idx)
         im_file = args.result_dir + '/' + idx + '_fake_B.png' 
         im = np.array(Image.open(im_file))
-        im = scipy.misc.imresize(im, (256, 256))
         im = scipy.misc.imresize(im, (label.shape[1], label.shape[2]))
-        im_label = np.zeros((256,256))
+        im_label = np.zeros((2048,1024))
         # change prediction image from color to label using neighbor 
-        for i in range(256):
-            for j in range(256):
+        for i in range(2048):
+            for j in range(1024):
                 color = im[i][j]
                 im_label[i][j] = neighbor_id(color)
         im_label = im_label[np.newaxis, ...]       
