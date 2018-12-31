@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--cityscapes_dir", type=str, required=True, help="Path to the original cityscapes dataset")
 parser.add_argument("--result_dir", type=str, required=True, help="Path to the generated images to be evaluated")
 parser.add_argument("--output_dir", type=str, required=True, help="Where to save the evaluation results")
-parser.add_argument("--caffemodel_dir", type=str, default='./scripts/eval_cityscapes/caffemodel/', help="Where the FCN-8s caffemodel stored")
+parser.add_argumeant("--caffemodel_dir", type=str, default='./scripts/eval_cityscapes/caffemodel/', help="Where the FCN-8s caffemodel stored")
 parser.add_argument("--gpu_id", type=int, default=0, help="Which gpu id to use")
 parser.add_argument("--split", type=str, default='val', help="Data split to be evaluated")
 parser.add_argument("--save_output_images", type=int, default=0, help="Whether to save the FCN output images")
@@ -45,6 +45,7 @@ def main():
         im_file = args.result_dir + '/' + idx + '_fake_B.png' 
         im = np.array(Image.open(im_file))
         im = scipy.misc.imresize(im, (256, 256))
+	#label = scipy.misc.imresize(label,(256,256))
         im = scipy.misc.imresize(im, (label.shape[1], label.shape[2]))
         im_label = np.zeros((256,256))
         # change prediction image from color to label using neighbor 
@@ -52,9 +53,14 @@ def main():
             for j in range(256):
                 color = im[i][j]
                 im_label[i][j] = neighbor_id(color)
-                
+	#im_label = im_label[np.newaxis, ...]
+#	print("im_label 256*256 trainId \n", im_label[0])
+	im_label = np.uint8(im_label)
+#	print("label " ,label.shape)
+#	print("im_label " , im_label.shape)                
         #out = segrun(net, CS.preprocess(im))
-        hist_perframe += fast_hist(label.flatten(), im_label.flatten(), n_cl)
+#        print("shape in, out:",label.shape,im_label.shape,"type in,out",type(label[0][0][0]),type(im_label[0][0][0]))
+	hist_perframe += fast_hist(label.flatten(), im_label.flatten(), n_cl)
         if args.save_output_images > 0:
             label_im = CS.palette(label)
             pred_im = CS.palette(out)
@@ -76,10 +82,12 @@ def neighbor_id(color):
     min_dist = 10000
     min_id = -1
     for i in range(len(labels.labels)):
-        dist = np.linalg.norm(labels.labels[i].color- color)
+        dist = np.linalg.norm(labels.labels[i].color-color)
         min_dist = min(min_dist, dist)
         if(min_dist == dist):
-            min_id = i 
+            min_id = labels.labels[i].trainId
+    if(min_id == -1):
+	min_id = 19 
     return min_id
 
 main()
