@@ -78,9 +78,10 @@ def neighbor_id(color):
     min_id = -1
     for i in range(len(labels.labels)):
         dist = np.linalg.norm(labels.labels[i].color - color)
-        min_dist = min(min_dist, dist)
-        if(min_dist == dist):
-            min_id = labels.labels[i].trainId
+        #min_dist = min(min_dist, dist)
+        if(min_dist > dist):
+            min_dist = dist
+	    min_id = labels.labels[i].trainId
     if(min_id == -1):
         min_id = 19 
     return min_id
