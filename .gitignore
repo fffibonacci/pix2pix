@@ -1,6 +1,8 @@
 #
 *~
-
+*.caffemodel
+*.pyc
+outputs/
 *.DS_Store
 cache/
 results/
