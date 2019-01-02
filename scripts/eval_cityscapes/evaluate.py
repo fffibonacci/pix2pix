@@ -81,8 +81,8 @@ def neighbor_id(color):
         dist = abs(a[0]) + abs(a[1]) + abs(a[2])
         #min_dist = min(min_dist, dist)
         if(min_dist > dist):
-            min_dist = dist
-	    min_id = labels.labels[i].trainId
+		min_dist = dist
+		min_id = labels.labels[i].trainId
     if(min_id == -1):
         min_id = 19 
     return min_id
