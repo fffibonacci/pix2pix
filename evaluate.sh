@@ -1,1 +1,1 @@
-python ./scripts/eval_cityscapes/evaluate.py --cityscapes_dir ~/Github/gtFine_val --result_dir ~/Github/Self-inverse/results/cityscapes_pix2pix_Self_allLrelu400epoch_v4/test_latest/images/ --output_dir ./outputs/cityscapes_pix2pix_Self_allLrelu400AtoB
+python ./scripts/eval_cityscapes/evaluate.py --cityscapes_dir ~/Github/gtFine_lin --result_dir ~/Github/Self-inverse-master/results/cityscapes_pix2pix_master_allLreluA2B_v4/test_latest/images_lin --output_dir ./outputs/cityscapes_pix2pix_master_allLreluA2B_lin

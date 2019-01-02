@@ -42,9 +42,11 @@ def main():
         city = idx.split('_')[0]
         # idx is city_shot_frame
         label = CS.load_label(args.split, city, idx)
-        im_file = args.result_dir + '/' + idx + '_fake_B.png' 
+        im_file = args.result_dir + '/' + idx + '_gtFine_color.png' 
         im = np.array(Image.open(im_file))
-       # im = scipy.misc.imresize(im, (label.shape[1], label.shape[2]))
+        im = im[:,:,0:3]
+        print(im.dtype, label.dtype)
+        im = scipy.misc.imresize(im, (256, 256),interp='nearest')
         im_label = np.zeros((256,256))
         # change prediction image from color to label using neighbor 
         for i in range(256):
@@ -55,6 +57,8 @@ def main():
         #out = segrun(net, CS.preprocess(im))
         # print(im_label.flatten().shape) 
         im_label = scipy.misc.imresize(im_label,(1024,2048),interp='nearest')
+        #np.int8!!!!!overflow
+        im_label = np.array(im_label,dtype = np.uint8)
         hist_perframe += fast_hist(label.flatten(), im_label.flatten(), n_cl)
         if args.save_output_images > 0:
             label_im = CS.palette(label)
@@ -62,7 +66,7 @@ def main():
             scipy.misc.imsave(output_image_dir + '/' + idx + '_pred_color.jpg', pred_im)
             scipy.misc.imsave(output_image_dir + '/' + idx + '_gt.jpg', label_im)
             scipy.misc.imsave(output_image_dir + '/' + idx + '_input_trainId.jpg', im_label)
-
+            scipy.misc.imsave(output_image_dir + '/' + idx + '_3gt.jpg', im)
     mean_pixel_acc, mean_class_acc, mean_class_iou, per_class_acc, per_class_iou = get_scores(hist_perframe)
     with open(args.output_dir + '/evaluation_results.txt', 'w') as f:
         f.write('Mean pixel accuracy: %f\n' % mean_pixel_acc)
@@ -74,7 +78,7 @@ def main():
                 cl = cl + ' '
             f.write('%s: acc = %f, iou = %f\n' % (cl, per_class_acc[i], per_class_iou[i]))
 def neighbor_id(color):
-    min_dist = 10000
+    min_dist = 1000
     min_id = -1
     for i in range(len(labels.labels)):
         a = labels.labels[i].color - color
@@ -85,6 +89,7 @@ def neighbor_id(color):
              min_id = labels.labels[i].trainId
     if(min_id == -1):
         min_id = 19 
+    #print(color, min_id)
     return min_id
 
 main()
