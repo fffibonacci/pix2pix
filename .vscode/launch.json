@@ -9,8 +9,8 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            // "args": ["--cityscapes_dir", "~/Github/gtFine_lin", "--result_dir", "/home/yifan/Github/Self-inverse-master/results/cityscapes_pix2pix_master_allLreluA2B_v4/test_latest/images_lin","--output_dir","./outputs/master_debug","--save_output_images","1"]
-            "args": ["--cityscapes_dir", "~/Github/gtFine_lin", "--result_dir","~/Github/gtFine_lin/gtFine/val/lindau", "--output_dir", "gt_lindau"]
+            "args": ["--cityscapes_dir", "~/Github/gtFine_lin", "--result_dir", "/home/yifan/Github/Self-inverse-master/results/cityscapes_pix2pix_master_allLreluA2B_v4/test_latest/images_lin","--output_dir","./outputs/master_debug","--save_output_images","1"]
+            // "args": ["--cityscapes_dir", "~/Github/gtFine_lin", "--result_dir","~/Github/gtFine_lin/gtFine/val/lindau", "--output_dir", "./output/gt_lindau_10","--save_output_images","1"]
         },
         {
             "name": "Python: Attach",

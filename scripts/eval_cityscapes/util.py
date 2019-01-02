@@ -20,9 +20,12 @@ def segrun(net, in_):
 def fast_hist(a, b, n):
     # print('saving')
     # sio.savemat('/tmp/fcn_debug/xx.mat', {'a':a, 'b':b, 'n':n})
-    
+    print(a.dtype,b.dtype)
     k = np.where((a >= 0) & (a < n))[0]
-    bc = np.bincount(n * a[k].astype(int) + b[k], minlength=n**2)
+    m = np.where(n * a[k].astype(int) + b[k].astype(int) > n**2-1)
+    b[m]  = n**2 - n * a[m]  - 2 
+    bc = np.bincount(n * a[k] + b[k], minlength=n**2)
+    #print(a[k].dtype, b[k].dtype)
     if len(bc) != n**2:
         # ignore this example if dimension mismatch
         return 0
@@ -31,7 +34,7 @@ def fast_hist(a, b, n):
 def get_scores(hist):
     # Mean pixel accuracy
     acc = np.diag(hist).sum() / (hist.sum() + 1e-12)
-
+    print(hist.sum())
     # Per class accuracy
     cl_acc = np.diag(hist) / (hist.sum(1) + 1e-12)
 
