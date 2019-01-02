@@ -2,6 +2,7 @@
 *~
 *pyc
 *caffemodel
+outputs/
 *.DS_Store
 cache/
 results/
