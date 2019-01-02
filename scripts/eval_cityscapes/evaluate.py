@@ -78,7 +78,7 @@ def neighbor_id(color):
     min_id = -1
     for i in range(len(labels.labels)):
         a = labels.labels[i].color - color
-	dist = abs(a[0]) + abs(a[1]) + abs(a[2])
+        dist = abs(a[0]) + abs(a[1]) + abs(a[2])
         #min_dist = min(min_dist, dist)
         if(min_dist > dist):
             min_dist = dist
