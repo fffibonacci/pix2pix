@@ -59,9 +59,9 @@ def main():
         if args.save_output_images > 0:
             label_im = CS.palette(label)
             pred_im = CS.palette(im_label)
-            scipy.misc.imsave(output_image_dir + '/' + str(i) + '_pred.jpg', pred_im)
+            scipy.misc.imsave(output_image_dir + '/' + str(i) + '_pred_color.jpg', pred_im)
             scipy.misc.imsave(output_image_dir + '/' + str(i) + '_gt.jpg', label_im)
-            scipy.misc.imsave(output_image_dir + '/' + str(i) + '_input.jpg', im_label)
+            scipy.misc.imsave(output_image_dir + '/' + str(i) + '_input_trainId.jpg', im_label)
 
     mean_pixel_acc, mean_class_acc, mean_class_iou, per_class_acc, per_class_iou = get_scores(hist_perframe)
     with open(args.output_dir + '/evaluation_results.txt', 'w') as f:
@@ -77,7 +77,8 @@ def neighbor_id(color):
     min_dist = 10000
     min_id = -1
     for i in range(len(labels.labels)):
-        dist = np.linalg.norm(labels.labels[i].color - color)
+        a = labels.labels[i].color - color
+	dist = abs(a[0]) + abs(a[1]) + abs(a[2])
         #min_dist = min(min_dist, dist)
         if(min_dist > dist):
             min_dist = dist
