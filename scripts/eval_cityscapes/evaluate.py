@@ -54,7 +54,7 @@ def main():
         #im_label = im_label[np.newaxis, ...]       
         #out = segrun(net, CS.preprocess(im))
         # print(im_label.flatten().shape) 
-        im_label = scipy.misc.imresize(im_label,(1024,2048),interp='nearest')
+	im_label = scipy.misc.imresize(im_label,(1024,2048),interp='nearest')
 	hist_perframe += fast_hist(label.flatten(), im_label.flatten(), n_cl)
         if args.save_output_images > 0:
             label_im = CS.palette(label)
