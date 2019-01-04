@@ -24,7 +24,6 @@ def fast_hist(a, b, n):
    # both_13 = np.where((a==13) & (b==13))
    # print( both_13 )
     bin_array = n * a[k].astype(int) + b[k].astype(int)
-    print(n)
     m = np.where( bin_array > 360 )
     bin_array[m] = 359
     #print(np.max(bin_array))
