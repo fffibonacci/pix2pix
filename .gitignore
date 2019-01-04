@@ -3,6 +3,7 @@
 *.caffemodel
 *.pyc
 outputs/
+gt_outputs/
 *.DS_Store
 cache/
 results/

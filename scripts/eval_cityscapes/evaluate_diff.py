@@ -43,13 +43,16 @@ def main():
         city = idx.split('_')[0]
         # idx is city_shot_frame
         label = CS.load_label(args.split, city, idx)
-        im_file = args.result_dir + '/' + idx + '_fake_B.png' 
+        im_file = args.result_dir + '/' + idx + '_leftImg8bit.png' 
         im = np.array(Image.open(im_file))
-        #im = im[:,:,0:3]
+        scipy.misc.imsave(output_image_dir + '/' + str(i) + '_gtphoto.jpg', im)
+        im = im[:,:,0:3]
         im = scipy.misc.imresize(im, (256, 256))
         #print(im.shape)  (256,256,3)
         im = scipy.misc.imresize(im, (label.shape[1], label.shape[2]))
+        scipy.misc.imsave(output_image_dir + '/' + str(i) + '_rescale.jpg', im)
         out = segrun(net, CS.preprocess(im))
+        #out = scipy.misc.imresize(out, (label.shape[1], label.shape[2]),interp='nearest')
         hist_perframe += fast_hist(label.flatten(), out.flatten(), n_cl)
         if args.save_output_images > 0:
             label_im = CS.palette(label)
