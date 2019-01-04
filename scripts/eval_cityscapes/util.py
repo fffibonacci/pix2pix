@@ -20,11 +20,17 @@ def segrun(net, in_):
 def fast_hist(a, b, n):
     # print('saving')
     # sio.savemat('/tmp/fcn_debug/xx.mat', {'a':a, 'b':b, 'n':n})
-    print(a.dtype,b.dtype)
     k = np.where((a >= 0) & (a < n))[0]
-    m = np.where(n * a[k].astype(int) + b[k].astype(int) > n**2-1)
-    b[m]  = n**2 - n * a[m]  - 2 
-    bc = np.bincount(n * a[k] + b[k], minlength=n**2)
+   # both_13 = np.where((a==13) & (b==13))
+   # print( both_13 )
+    bin_array = n * a[k].astype(int) + b[k].astype(int)
+    #print(n**2)
+    m = np.where( bin_array > 360 )
+    bin_array[m] = 359
+    #print(np.max(bin_array))
+    #print(a[np.where(a[np.where(a>12)]!=255)],b[np.where(b[np.where(b>12)]!=255)])
+    bc = np.bincount(bin_array, minlength=361)
+    #print('diagonal12-15', bc[12*19+12],bc[13*19+13],bc[14*19+14],bc[15*19+15])
     #print(a[k].dtype, b[k].dtype)
     if len(bc) != n**2:
         # ignore this example if dimension mismatch

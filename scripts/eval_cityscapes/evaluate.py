@@ -39,14 +39,14 @@ def main():
     for i, idx in enumerate(label_frames):
        # if( i>10 ):
        #     break
-        if i % 2 == 0:
+        if i % 10 == 0:
             print('Evaluating: %d/%d' % (i, len(label_frames)))
         city = idx.split('_')[0]
         # idx is city_shot_frame
         label = CS.load_label(args.split, city, idx)
         im_file = args.result_dir + '/' + idx + '_fake_B.png' 
         im = np.array(Image.open(im_file))
-        #im = im[:,:,0:3]
+#        im = im[:,:,0:3]
 #        print(im.dtype, label.dtype)
         im = scipy.misc.imresize(im, (256, 256),interp='nearest')
         im_label = np.zeros((256,256))
@@ -56,14 +56,18 @@ def main():
                 color = im[i][j]
                 im_label[i][j] = neighbor_id(color)
         #im_label = im_label[np.newaxis, ...]       
-        #out = segrun(net, CS.preprocess(im))
+        #out = segrun(net, CS.preprocess(im_label))
         # print(im_label.flatten().shape) 
         im_label = scipy.misc.imresize(im_label,(1024,2048),interp='nearest')
         #np.int8!!!!!overflow
+	label = np.squeeze(label)
         im_label = np.array(im_label,dtype = np.uint8)
-        false_im = (im_label==np.squeeze(label))*255
-        label = np.squeeze(label)
+	#index = np.where((im_label.flatten()==13) & (label.flatten()==13))
+	#print(index)
+        false_im = (im_label==label)*255
         hist_perframe += fast_hist(label.flatten(), im_label.flatten(), n_cl)
+	#for m in range(12,19):
+	#    print(hist_perframe[m][m])
         if args.save_output_images > 0:
             label_im = CS.palette(label)
             pred_im = CS.palette(im_label)
@@ -92,9 +96,7 @@ def neighbor_id(color):
         if(min_dist > dist):
              min_dist = dist
              min_id = labels.labels[i].trainId
-   # if(min_id == -1):
-   #     min_id = 19 
-    #print(color, min_id)
+  	
     return min_id
 
 main()
