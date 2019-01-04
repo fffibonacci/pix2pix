@@ -43,9 +43,11 @@ def main():
         label = CS.load_label(args.split, city, idx)
         im_file = args.result_dir + '/' + idx + '_leftImg8bit.png' 
         im = np.array(Image.open(im_file))
-        # im = scipy.misc.imresize(im, (256, 256))
-        im = scipy.misc.imresize(im, (label.shape[1], label.shape[2]))
-        out = segrun(net, CS.preprocess(im))
+        im = im[:,:,0:3]
+	# im = scipy.misc.imresize(im, (256, 256))
+        #im = scipy.misc.imresize(im, (label.shape[1], label.shape[2])
+	out = segrun(net, CS.preprocess(im))
+#	print(im.shape, out.shape)
         hist_perframe += fast_hist(label.flatten(), out.flatten(), n_cl)
         if args.save_output_images > 0:
             label_im = CS.palette(label)
