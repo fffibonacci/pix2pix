@@ -48,7 +48,7 @@ def main():
         im = im[:,:,0:3]
         im = scipy.misc.imresize(im, (256, 256))
         #print(im.shape)  (256,256,3)
-        im = scipy.misc.imresize(im, (label.shape[1], label.shape[2])) #(1024,2048)
+        im = scipy.misc.imresize(im, (label.shape[1], label.shape[2]),interp='nearest') #(1024,2048)
         out = segrun(net, CS.preprocess(im))
         hist_perframe += fast_hist(label.flatten(), out.flatten(), n_cl)
         if args.save_output_images > 0:
