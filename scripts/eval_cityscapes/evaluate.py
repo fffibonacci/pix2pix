@@ -46,7 +46,7 @@ def main():
         im_file = args.result_dir + '/' + idx + '_fake_B.png' 
         im = np.array(Image.open(im_file))
         #im = im[:,:,0:3]
-        im = scipy.misc.imresize(im, (256, 256))
+        #im = scipy.misc.imresize(im, (256, 256))
         #print(im.shape)  (256,256,3)
         im = scipy.misc.imresize(im, (label.shape[1], label.shape[2]))
         out = segrun(net, CS.preprocess(im))
