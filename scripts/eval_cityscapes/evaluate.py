@@ -54,9 +54,9 @@ def main():
         if args.save_output_images > 0:
             label_im = CS.palette(label)
             pred_im = CS.palette(out)
-            scipy.misc.imsave(output_image_dir + '/' + str(i) + '_pred.jpg', pred_im)
-            scipy.misc.imsave(output_image_dir + '/' + str(i) + '_gt.jpg', label_im)
-            scipy.misc.imsave(output_image_dir + '/' + str(i) + '_input.jpg', im)
+            scipy.misc.imsave(output_image_dir + '/' + idx + '_pred.jpg', pred_im)
+            scipy.misc.imsave(output_image_dir + '/' + idx + '_gt.jpg', label_im)
+            scipy.misc.imsave(output_image_dir + '/' + idx + '_input.jpg', im)
 
     mean_pixel_acc, mean_class_acc, mean_class_iou, per_class_acc, per_class_iou = get_scores(hist_perframe)
     with open(args.output_dir + '/evaluation_results.txt', 'w') as f:
