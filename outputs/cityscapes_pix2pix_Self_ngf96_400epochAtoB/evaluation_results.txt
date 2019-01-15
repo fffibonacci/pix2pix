@@ -1,0 +1,23 @@
+Mean pixel accuracy: 0.839628
+Mean class accuracy: 0.356888
+Mean class IoU: 0.305009
+************ Per class numbers below ************
+road           : acc = 0.977228, iou = 0.926124
+sidewalk       : acc = 0.732252, iou = 0.602759
+building       : acc = 0.912787, iou = 0.774323
+wall           : acc = 0.093896, iou = 0.046639
+fence          : acc = 0.058439, iou = 0.044848
+pole           : acc = 0.086505, iou = 0.072298
+traffic light  : acc = 0.057425, iou = 0.039468
+traffic sign   : acc = 0.089450, iou = 0.079042
+vegetation     : acc = 0.885160, iou = 0.740939
+terrain        : acc = 0.462523, iou = 0.391616
+sky            : acc = 0.875576, iou = 0.836952
+person         : acc = 0.535747, iou = 0.336310
+rider          : acc = 0.050113, iou = 0.040009
+car            : acc = 0.850893, iou = 0.772222
+truck          : acc = 0.031520, iou = 0.021184
+bus            : acc = 0.014927, iou = 0.013342
+train          : acc = 0.000935, iou = 0.000789
+motorcycle     : acc = 0.001112, iou = 0.000083
+bicycle        : acc = 0.064389, iou = 0.056230
