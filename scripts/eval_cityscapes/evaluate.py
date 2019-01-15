@@ -42,8 +42,8 @@ def main():
             print('Evaluating: %d/%d' % (i, len(label_frames)))
         city = idx.split('_')[0]
         # idx is city_shot_frame
-        label = CS.load_label(args.split, city, idx)
-        im_file = args.result_dir + '/' + idx + '_fake_B.png' 
+        label = CS.load_label(args.split, city, idx) 
+        im_file = args.result_dir + '/' + idx + '_fake_B.png' #photo
         im = np.array(Image.open(im_file))
         #im = im[:,:,0:3]
         #im = scipy.misc.imresize(im, (256, 256))
@@ -52,11 +52,11 @@ def main():
         out = segrun(net, CS.preprocess(im))
         hist_perframe += fast_hist(label.flatten(), out.flatten(), n_cl)
         if args.save_output_images > 0:
-            label_im = CS.palette(label)
+            label_im = CS.palette(label) #label
             pred_im = CS.palette(out)
-            scipy.misc.imsave(output_image_dir + '/' + idx + '_pred.jpg', pred_im)
-            scipy.misc.imsave(output_image_dir + '/' + idx + '_gt.jpg', label_im)
-            scipy.misc.imsave(output_image_dir + '/' + idx + '_input.jpg', im)
+            scipy.misc.imsave(output_image_dir + '/' + idx + '_pred.jpg', pred_im) 
+            scipy.misc.imsave(output_image_dir + '/' + idx + '_gt.jpg', label_im) #label
+            scipy.misc.imsave(output_image_dir + '/' + idx + '_input.jpg', im) #photo
 
     mean_pixel_acc, mean_class_acc, mean_class_iou, per_class_acc, per_class_iou = get_scores(hist_perframe)
     with open(args.output_dir + '/evaluation_results.txt', 'w') as f:
