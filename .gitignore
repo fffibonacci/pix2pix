@@ -2,8 +2,6 @@
 *~
 *pyc
 #*caffemodel
-outputs
-output
 gt_lindauimage_outputs
 gt_lindau_10image_outputs
 *.DS_Store
