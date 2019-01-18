@@ -66,12 +66,11 @@ def main():
 	#print(index)
         false_im = (im_label==label)*255
         hist_perframe += fast_hist(label.flatten(), im_label.flatten(), n_cl)
-	#for m in range(12,19):
-	#    print(hist_perframe[m][m])
+	im = scipy.misc.imresize(im,(1024,2048))
         if args.save_output_images > 0:
             label_im = CS.palette(label)
             pred_im = CS.palette(im_label)
-            scipy.misc.imsave(output_image_dir + '/' + idx + '_pred_color.jpg', pred_im)
+            scipy.misc.imsave(output_image_dir + '/' + idx + '_resize_color.jpg', im)
             scipy.misc.imsave(output_image_dir + '/' + idx + '_gt.jpg', label_im)
             scipy.misc.imsave(output_image_dir + '/' + idx + '_input_trainId.jpg', im_label)
             scipy.misc.imsave(output_image_dir + '/' + idx + '_3gt.jpg', im)
