@@ -34,7 +34,13 @@ def main():
                     args.caffemodel_dir + 'fcn-8s-cityscapes.caffemodel',
                     caffe.TEST)
 
-    hist_perframe = np.zeros((n_cl, n_cl))
+    hist_perframe = np.zeros((4, n_cl, n_cl))
+
+    with open(args.output_dir + '/evaluation_results.txt', 'w') as f:
+        f.write('Image_Name\nMean pixel accuracy\tMean class accuracy\tMean class IoU\n')
+       # f.write('Mean class accuracy: %f\n' % mean_class_acc)
+       # f.write('Mean class IoU: %f\n' % mean_class_iou)
+
     for i, idx in enumerate(label_frames):
     	#if i > 50:
 	    #    break
@@ -50,7 +56,7 @@ def main():
         #print(im.shape)  (256,256,3)
         im = scipy.misc.imresize(im, (label.shape[1], label.shape[2]))
         out = segrun(net, CS.preprocess(im))
-        hist_perframe += fast_hist(label.flatten(), out.flatten(), n_cl)
+        hist_perframe[i] = fast_hist(label.flatten(), out.flatten(), n_cl)
         if args.save_output_images > 0:
             label_im = CS.palette(label) #label
             pred_im = CS.palette(out)
@@ -58,14 +64,9 @@ def main():
             scipy.misc.imsave(output_image_dir + '/' + idx + '_gt.jpg', label_im) #label
             scipy.misc.imsave(output_image_dir + '/' + idx + '_input.jpg', im) #photo
 
-    mean_pixel_acc, mean_class_acc, mean_class_iou, per_class_acc, per_class_iou = get_scores(hist_perframe)
-    with open(args.output_dir + '/evaluation_results.txt', 'w') as f:
-        f.write('Mean pixel accuracy: %f\n' % mean_pixel_acc)
-        f.write('Mean class accuracy: %f\n' % mean_class_acc)
-        f.write('Mean class IoU: %f\n' % mean_class_iou)
-        f.write('************ Per class numbers below ************\n')
-        for i, cl in enumerate(CS.classes):
-            while len(cl) < 15:
-                cl = cl + ' '
-            f.write('%s: acc = %f, iou = %f\n' % (cl, per_class_acc[i], per_class_iou[i]))
+        mean_pixel_acc, mean_class_acc, mean_class_iou, per_class_acc, per_class_iou = get_scores(hist_perframe[i])
+        with open(args.output_dir + '/evaluation_results.txt', 'a') as f:
+            f.write('%s, %f, %f, %f\n' % (idx,mean_pixel_acc,mean_class_acc,mean_class_iou))
+
+
 main()
