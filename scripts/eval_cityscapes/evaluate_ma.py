@@ -7,7 +7,6 @@ import scipy.misc
 from PIL import Image
 from util import *
 from cityscapes import cityscapes
-labels = __import__('labels')
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--cityscapes_dir", type=str, required=True, help="Path to the original cityscapes dataset")
@@ -29,64 +28,45 @@ def main():
     CS = cityscapes(args.cityscapes_dir)
     n_cl = len(CS.classes)
     label_frames = CS.list_label_frames(args.split)
-#    caffe.set_device(args.gpu_id)
-#    caffe.set_mode_gpu()
-#    net = caffe.Net(args.caffemodel_dir + 'deploy.prototxt',
-#                    args.caffemodel_dir + 'fcn-8s-cityscapes.caffemodel',
-#                    caffe.TEST)
+    caffe.set_device(args.gpu_id)
+    caffe.set_mode_gpu()
+    net = caffe.Net(args.caffemodel_dir + '/deploy.prototxt',
+                    args.caffemodel_dir + 'fcn-8s-cityscapes.caffemodel',
+                    caffe.TEST)
 
     hist_perframe = np.zeros((4, n_cl, n_cl))
 
     with open(args.output_dir + '/evaluation_results.txt', 'w') as f:
         f.write('Image_Name\nMean pixel accuracy\tMean class accuracy\tMean class IoU\n')
+       # f.write('Mean class accuracy: %f\n' % mean_class_acc)
+       # f.write('Mean class IoU: %f\n' % mean_class_iou)
 
     for i, idx in enumerate(label_frames):
-       # if( i>10 ):
-       #     break
+    	#if i > 50:
+	    #    break
         if i % 10 == 0:
             print('Evaluating: %d/%d' % (i, len(label_frames)))
         city = idx.split('_')[0]
         # idx is city_shot_frame
-        label = CS.load_label(args.split, city, idx)
-        im_file = args.result_dir + '/' + idx + '_fake_B.png' 
+        label = CS.load_label(args.split, city, idx) 
+        im_file = args.result_dir + '/' + idx + '_fake_B.png' #photo
         im = np.array(Image.open(im_file))
-        im = scipy.misc.imresize(im, (256, 256),interp='nearest')
-        im_label = np.zeros((256,256))
-        # change prediction image from color to label using neighbor 
-        for a in range(256):
-            for j in range(256):
-                color = im[a][j]
-                im_label[a][j] = neighbor_id(color)
-        im_label = scipy.misc.imresize(im_label,(1024,2048),interp='nearest')
-        #np.int8!!!!!overflow
-	label = np.squeeze(label)
-        im_label = np.array(im_label,dtype = np.uint8)
-        false_im = (im_label==label)*255
-        hist_perframe[i] = fast_hist(label.flatten(), im_label.flatten(), n_cl)
-	im = scipy.misc.imresize(im,(1024,2048))
+        #im = im[:,:,0:3]
+        #im = scipy.misc.imresize(im, (256, 256))
+        #print(im.shape)  (256,256,3)
+        im = scipy.misc.imresize(im, (label.shape[1], label.shape[2]))
+        out = segrun(net, CS.preprocess(im))
+        hist_perframe[i] = fast_hist(label.flatten(), out.flatten(), n_cl)
         if args.save_output_images > 0:
-            label_im = CS.palette(label)
-            pred_im = CS.palette(im_label)
-            scipy.misc.imsave(output_image_dir + '/' + idx + '_resize_color.jpg', im)
-            scipy.misc.imsave(output_image_dir + '/' + idx + '_gt.jpg', label_im)
-            scipy.misc.imsave(output_image_dir + '/' + idx + '_input_trainId.jpg', im_label)
-            scipy.misc.imsave(output_image_dir + '/' + idx + '_3gt.jpg', im)
-            scipy.misc.imsave(output_image_dir + '/' + idx + '_false.jpg', false_im)
+            label_im = CS.palette(label) #label
+            pred_im = CS.palette(out)
+            scipy.misc.imsave(output_image_dir + '/' + idx + '_pred.jpg', pred_im) 
+            scipy.misc.imsave(output_image_dir + '/' + idx + '_gt.jpg', label_im) #label
+            scipy.misc.imsave(output_image_dir + '/' + idx + '_input.jpg', im) #photo
+
         mean_pixel_acc, mean_class_acc, mean_class_iou, per_class_acc, per_class_iou = get_scores(hist_perframe[i])
         with open(args.output_dir + '/evaluation_results.txt', 'a') as f:
             f.write('%s, %f, %f, %f\n' % (idx,mean_pixel_acc,mean_class_acc,mean_class_iou))
 
-def neighbor_id(color):
-    min_dist = 1000
-    min_id = -1
-    for i in range(len(labels.labels)):
-        a = labels.labels[i].color - color
-        dist = abs(a[0]) + abs(a[1]) + abs(a[2])
-        #min_dist = min(min_dist, dist)
-        if(min_dist > dist):
-             min_dist = dist
-             min_id = labels.labels[i].trainId
-  	
-    return min_id
 
 main()

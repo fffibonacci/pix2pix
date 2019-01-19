@@ -1,13 +1,13 @@
 #
 *~
-*pyc
-#*caffemodel
-gt_lindauimage_outputs
-gt_lindau_10image_outputs
+*.caffemodel
+*.pyc
+gt_outputs/
 *.DS_Store
 cache/
 results/
 checkpoints/
+outputs/
 
 # luarocks build files
 *.src.rock
