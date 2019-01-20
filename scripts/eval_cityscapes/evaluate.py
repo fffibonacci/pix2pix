@@ -51,10 +51,10 @@ def main():
         im = scipy.misc.imresize(im, (256, 256),interp='nearest')
         im_label = np.zeros((256,256))
         # change prediction image from color to label using neighbor 
-        for i in range(256):
+        for a in range(256):
             for j in range(256):
-                color = im[i][j]
-                im_label[i][j] = neighbor_id(color)
+                color = im[a][j]
+                im_label[a][j] = neighbor_id(color)
         #im_label = im_label[np.newaxis, ...]       
         #out = segrun(net, CS.preprocess(im_label))
         # print(im_label.flatten().shape) 
