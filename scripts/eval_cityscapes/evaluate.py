@@ -34,10 +34,10 @@ def main():
                     args.caffemodel_dir + 'fcn-8s-cityscapes.caffemodel',
                     caffe.TEST)
 
-    hist_perframe = np.zeros((4, n_cl, n_cl))
+    hist_perframe = np.zeros((500, n_cl, n_cl))
 
-    with open(args.output_dir + '/evaluation_results.txt', 'w') as f:
-        f.write('Image_Name\nMean pixel accuracy\tMean class accuracy\tMean class IoU\n')
+    with open(args.output_dir + '/evaluation_results.csv', 'w') as f:
+        f.write('Image_Name, Mean pixel accuracy,Mean class accuracy,Mean class IoU\n')
        # f.write('Mean class accuracy: %f\n' % mean_class_acc)
        # f.write('Mean class IoU: %f\n' % mean_class_iou)
 
@@ -65,7 +65,7 @@ def main():
             scipy.misc.imsave(output_image_dir + '/' + idx + '_input.jpg', im) #photo
 
         mean_pixel_acc, mean_class_acc, mean_class_iou, per_class_acc, per_class_iou = get_scores(hist_perframe[i])
-        with open(args.output_dir + '/evaluation_results.txt', 'a') as f:
+        with open(args.output_dir + '/evaluation_results.csv', 'a') as f:
             f.write('%s, %f, %f, %f\n' % (idx,mean_pixel_acc,mean_class_acc,mean_class_iou))
 
 
