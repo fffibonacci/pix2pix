@@ -19,6 +19,7 @@ class cityscapes:
         labels = __import__('labels')
         self.id2trainId = {label.id: label.trainId for label in labels.labels}  # dictionary mapping from raw IDs to train IDs
         self.trainId2color = {label.trainId: label.color for label in labels.labels}  # dictionary mapping train IDs to colors as 3-tuples
+        self.color2id = {label.color: label.id for label in labels.labels}
 
     def get_dset(self, split):
         '''
