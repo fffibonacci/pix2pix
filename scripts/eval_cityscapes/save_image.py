@@ -44,7 +44,7 @@ def main():
         city = idx.split('_')[0]
         # idx is city_shot_frame
         label = CS.load_label(args.split, city, idx)
-        im_file = args.result_dir + '/' + idx + '_fake_B.png' 
+        im_file = args.result_dir + '/' + idx + '_fake_B.png'
         im = np.array(Image.open(im_file))
 #        im = im[:,:,0:3]
 #        print(im.dtype, label.dtype)
