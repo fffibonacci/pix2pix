@@ -1,6 +1,6 @@
 python ./scripts/eval_cityscapes/evaluate.py \
 --save_output_images 1 \
---cityscapes_dir ~/Github/gtFine_vis \
---result_dir ~/vis/masterBtoA \
---output_dir ~/vis_outputs/
+--cityscapes_dir ~/Github/gtFine_val \
+--result_dir ~/results_var/BtoA/cityscapes_pix2pix_Self_400epoch_v2/realAfakeB_latest/images/ \
+--output_dir ~/outputs_var/
 --
