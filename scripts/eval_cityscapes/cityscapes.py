@@ -20,6 +20,7 @@ class cityscapes:
         self.id2trainId = {label.id: label.trainId for label in labels.labels}  # dictionary mapping from raw IDs to train IDs
         self.trainId2color = {label.trainId: label.color for label in labels.labels}  # dictionary mapping train IDs to colors as 3-tuples
         self.color2id = {label.color: label.id for label in labels.labels}
+        self.Id2color = {label.id: label.color for label in labels.labels}
 
     def get_dset(self, split):
         '''
@@ -51,6 +52,7 @@ class cityscapes:
             for k, v in self.id2trainId.items():
                 label[label == k] = v
         return label
+
 
     def load_label(self, split, city, idx):
         """
@@ -89,6 +91,21 @@ class cityscapes:
                 color[label == k, :] = v
         else:
             for k, v in self.trainId2color.items():
+                color[label == k, :] = v
+        return color
+
+    def palette_labelid(self, label):
+        '''
+        Map Ids to colors as specified in labels.py
+        '''
+        if label.ndim == 3:
+            label= label[0]
+        color = np.empty((label.shape[0], label.shape[1], 3))
+        if sys.version_info[0] < 3:
+            for k, v in self.Id2color.iteritems():
+                color[label == k, :] = v
+        else:
+            for k, v in self.Id2color.items():
                 color[label == k, :] = v
         return color
 

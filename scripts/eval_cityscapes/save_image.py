@@ -23,54 +23,33 @@ def main():
     if not os.path.isdir(args.output_dir):
         os.makedirs(args.output_dir)
     if args.save_output_images > 0:
-        output_image_dir = args.output_dir + 'image_outputs/'
+        output_image_dir = args.output_dir
         if not os.path.isdir(output_image_dir):
             os.makedirs(output_image_dir)
     CS = cityscapes(args.cityscapes_dir)
     n_cl = len(CS.classes)
     label_frames = CS.list_label_frames(args.split)
-#    caffe.set_device(args.gpu_id)
-#    caffe.set_mode_gpu()
-#    net = caffe.Net(args.caffemodel_dir + 'deploy.prototxt',
-#                    args.caffemodel_dir + 'fcn-8s-cityscapes.caffemodel',
-#                    caffe.TEST)
-
-#    hist_perframe = np.zeros((n_cl, n_cl))
     for i, idx in enumerate(label_frames):
-       # if( i>10 ):
-       #     break
+        if i%2 == 0:
+            print("Ignore buildings; id=11")
+            label_ignore = 11
+        if i%2 == 1:
+            print("Ignore wall; id=12")
+            label_ignore = 12        
         if i % 10 == 0:
-            print('Saving: %d/%d' % (i, len(label_frames)))
+            print('Saving: %d/%d, Igonoring label %d' % (i, len(label_frames), label_ignore))
         city = idx.split('_')[0]
         # idx is city_shot_frame
         label = CS.load_label(args.split, city, idx)
-        im_file = args.result_dir + '/' + idx + '_fake_B.png'
+        im_file = args.result_dir + '/' + idx + '_gtFine_labelIds.png'
         im = np.array(Image.open(im_file))
-#        im = im[:,:,0:3]
-#        print(im.dtype, label.dtype)
-#        im = scipy.misc.imresize(im, (256, 256),interp='nearest')
-        #im_label = np.zeros((256,256))
-        # change prediction image from color to label using neighbor 
-        #for i in range(256):
-        #    for j in range(256):
-        #        color = im[i][j]
-        #        im_label[i][j] = neighbor_id(color)
-        #im_label = im_label[np.newaxis, ...]       
-        #out = segrun(net, CS.preprocess(im_label))
-        # print(im_label.flatten().shape) 
-        #im_label = scipy.misc.imresize(im_label,(1024,2048))
-        #np.int8!!!!!overflow
-	#label = np.squeeze(label)
-        #im_label = np.array(im_label,dtype = np.uint8)
-	#index = np.where((im_label.flatten()==13) & (label.flatten()==13))
-	#print(index)
-        #false_im = (im_label==label)*255
-        #hist_perframe += fast_hist(label.flatten(), im_label.flatten(), n_cl)
-	im = scipy.misc.imresize(im,(1024,2048))
+        im[np.where(im==label_ignore)] = 0
+	im = scipy.misc.imresize(im,(256,256),interp='nearest')
+
         if args.save_output_images > 0:
-            #label_im = CS.palette(label)
+            color_im_ignorelabel = CS.palette_labelid(im)
             #pred_im = CS.palette(im_label)
-            scipy.misc.imsave(output_image_dir + '/' + idx + '_resize_color.jpg',im)
+            scipy.misc.imsave(output_image_dir + '/' + idx + '.jpg',color_im_ignorelabel)
             #scipy.misc.imsave(output_image_dir + '/' + idx + '_gt.jpg', label_im)
             #scipy.misc.imsave(output_image_dir + '/' + idx + '_input_trainId.jpg', im_label)
             #scipy.misc.imsave(output_image_dir + '/' + idx + '_3gt.jpg', im)
