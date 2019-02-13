@@ -59,7 +59,6 @@ def main():
         #out = segrun(net, CS.preprocess(im_label))
         # print(im_label.flatten().shape) 
         im_label = scipy.misc.imresize(im_label,(1024,2048),interp='nearest')
-        #np.int8!!!!!overflow
 	label = np.squeeze(label)
         im_label = np.array(im_label,dtype = np.uint8)
 	#index = np.where((im_label.flatten()==13) & (label.flatten()==13))
